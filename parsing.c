@@ -6,7 +6,7 @@
 /*   By: khmessah <khmessah@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/18 15:57:53 by mmondad           #+#    #+#             */
-/*   Updated: 2024/06/19 19:04:39 by khmessah         ###   ########.fr       */
+/*   Updated: 2024/06/19 21:57:59 by khmessah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,7 @@ int main(int argc, char **argv, char **penv)
     t_path *path =  malloc(sizeof(t_path));
 	while (1)
 	{
+		
 		init_info(argc, argv, penv, &info);
 		info.line = readline ("minishell-0.0$ ");
 		if (info.line)
@@ -77,8 +78,10 @@ int main(int argc, char **argv, char **penv)
 				while(info.plist->parts[s])
 					s++;
 			herdoc_appel(&info);
-			my_env = exec_builtin(my_env,&info,s);
-			execution_cmd(s,my_env,path,&info);
+			if (check_is_builtin(&info) == 1)
+				my_env = exec_builtin(my_env,&info,s);
+			else
+				execution_cmd(s,my_env,path,&info);
 		}
 		else
 			printf("stx_error\n");

@@ -61,10 +61,10 @@ int **cree_pipe(int number_pipe)
     }
     return pipes;
 }
-void execution_cmd(int ac, t_variable *env, t_path *path, t_info *info) 
+void execution_cmd(int ac, t_variable *env, t_path *path, t_info *info)
 {
     (void)ac;
-    int nb_cmds = 2;
+    int nb_cmds = 1;
     printf("nb_cmds : %d\n",nb_cmds);
     int pid;
     int **pipes = cree_pipe(info->lst_size);

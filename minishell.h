@@ -6,7 +6,7 @@
 /*   By: khmessah <khmessah@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/18 13:36:40 by mmondad           #+#    #+#             */
-/*   Updated: 2024/06/19 19:03:57 by khmessah         ###   ########.fr       */
+/*   Updated: 2024/06/19 21:57:07 by khmessah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -132,15 +132,17 @@ char	*ft_strdup(t_info *info, t_split data);
 int		stx_errors(t_info info);
 char	*ft_substr(char *s, unsigned int start, size_t len);
 
+/**/
 
 char		*builtin_pwd();
+int			check_is_builtin(t_info *info);
 t_variable *exec_builtin(t_variable *my_env, t_info	*info, int s);
 void    	herdoc_appel(t_info *info);
 void    	print_env1(t_variable *my_env);
 void    	heredoc(char *av);
 void    	augment_level_shlvl(t_variable *env);
 t_variable *builtin_export(char **av,t_variable *env);
-t_variable *builtin_unset(char **av,t_variable *env);
+t_variable *builtin_unset(char **av,t_variable *env);	
 void    	builtin_exit(int ac,char **av);
 void    	builtin_echo(int ac,char **av);
 int    		builtin_cd(int ac,char **av,t_variable *my_env);

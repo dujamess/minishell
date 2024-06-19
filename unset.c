@@ -85,7 +85,5 @@ t_variable *builtin_unset(char **av,t_variable *env)
         i++;
     }
     new_env[s].valeur = NULL;
-    new_env[s].nom = NULL;
-    printf("jfjfjf\n");
     return new_env;
 }

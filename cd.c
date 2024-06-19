@@ -15,7 +15,6 @@ t_variable  *check_variable(t_variable *my_env,char *variable)
 }
 int    builtin_cd(int ac,char **av,t_variable *my_env)
 {
-    printf("===%d\n",ac);
     char *oldpwd = getcwd(NULL, 4096);
     char  *pwd;
     t_variable *path;

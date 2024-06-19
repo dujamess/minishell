@@ -6,12 +6,23 @@
 /*   By: khmessah <khmessah@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/19 18:02:07 by khmessah          #+#    #+#             */
-/*   Updated: 2024/06/19 18:26:14 by khmessah         ###   ########.fr       */
+/*   Updated: 2024/06/19 21:59:11 by khmessah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
+int	check_is_builtin(t_info *info)
+{
+	if ((info->plist->parts[0] && ft_strcmp(info->plist->parts[0], "pwd") == 0)
+	|| (info->plist->parts[0] && ft_strcmp(info->plist->parts[0], "env") == 0)
+	|| (info->plist->parts[0] && ft_strcmp(info->plist->parts[0], "echo") == 0)
+	|| (info->plist->parts[0] && ft_strcmp(info->plist->parts[0], "cd") == 0)
+	|| (info->plist->parts[0] && ft_strcmp(info->plist->parts[0], "exit") == 0)
+	|| (info->plist->parts[0] && ft_strcmp(info->plist->parts[0],"unset") == 0)
+	|| (info->plist->parts[0] && ft_strcmp(info->plist->parts[0],"export") == 0))
+		return 1;
+	return 0;
+}
 t_variable *exec_builtin(t_variable *my_env, t_info	*info, int s)
 {
     if (info->plist->parts[0] && ft_strcmp(info->plist->parts[0], "pwd") == 0)
