@@ -61,78 +61,98 @@ int **cree_pipe(int number_pipe)
     }
     return pipes;
 }
-void execution_cmd(int ac, t_variable *env, t_path *path, t_info *info)
+int cherch_input(t_info *info)
 {
-    (void)ac;
-    int nb_cmds = 3;
-    int pid;
-    int **pipes = cree_pipe(info->lst_size);
+    int fd = 0;
     int i;
     i = 0;
-    while (i < nb_cmds) 
+    while(info->plist->reds && info->plist->reds[i])
     {
-        printf("oo\n");
-        pid = fork();
-        if (pid == 0) 
+        if (info->plist->types[i] == I_RED)
         {
-            if (info->plist->reds && info->plist->types[i] == O_RED) 
+            if (info->plist->reds[i + 1])
             {
-                int fd = open(info->plist->reds[i + 1], O_WRONLY | O_CREAT | O_TRUNC, 0666);
-                if (fd == -1) 
-                {
-                    perror("open");
-                    exit(EXIT_FAILURE);
-                }
-                dup2(fd, STDOUT_FILENO);
                 close(fd);
-            } 
-            else if (info->plist->reds && info->plist->types[i] == I_RED) 
-            {
-                int fd = open(info->plist->reds[i + 1], O_RDONLY);
+                fd = open(info->plist->reds[i + 1], O_RDONLY);
                 if (fd == -1) 
                 {
+                    printf("input ----%s\n",info->plist->reds[i + 1]);
                     perror("open");
                     exit(EXIT_FAILURE);
                 }
                 dup2(fd, STDIN_FILENO);
-                close(fd);
             }
-            if (info->plist->reds && info->plist->types[i] == PIPE)
-            {
-                if (i != 0) 
-                { 
-                    dup2(pipes[i - 1][0], STDIN_FILENO);
-                    close(pipes[i - 1][1]);
-                }
-                if (i != nb_cmds - 1)
-                {
-                    dup2(pipes[i][1],STDOUT_FILENO);
-                    close(pipes[i][0]);
-                }
-            } 
-            char *s = join_commande_path1(path, info->plist->parts[i]);
-            if (s == NULL) 
-            {
-                printf("command not found : %s\n",info->plist->parts[i]);
-                exit(EXIT_FAILURE);
-            }
-            execve(s, info->plist->parts, (char **)env);
-            perror("execve");
-            exit(EXIT_FAILURE);
+             else
+                break;
         }
         i++;
     }
+    if (fd == 0 && info->plist->next)
+        dup2(0, STDIN_FILENO);
+    printf("input %d\n",fd);
+    return fd;
+}
+int cherch_output(t_info *info)
+{
+    int fd = 1;
+    int i;
     i = 0;
-    while (i < nb_cmds) 
+
+    dup2(1, STDOUT_FILENO);
+    while(info->plist->reds && info->plist->reds[i])
     {
-        close(pipes[i][0]);
-        close(pipes[i][1]);
+        if (info->plist->types[i] == O_RED)
+        {
+            if (info->plist->reds[i + 1])
+            {
+                close(fd);
+                fd = open(info->plist->reds[i + 1], O_WRONLY | O_CREAT | O_TRUNC, 0666);
+                if (fd == -1) 
+                {
+                    printf("output ----%s\n",info->plist->reds[i + 1]);
+                    perror("open");
+                    exit(EXIT_FAILURE); 
+                }
+                dup2(fd, STDOUT_FILENO);
+            }
+            else
+                break;
+        }
+        else if(info->plist->types[i] == A_RED)
+        {
+            if (info->plist->reds[i + 1])
+            {
+                close(fd);
+                fd = open(info->plist->reds[i + 1], O_WRONLY | O_CREAT | O_TRUNC, 0666);
+                dup2(fd, STDOUT_FILENO);
+            }
+             else
+                break;
+        }
         i++;
     }
+    if (fd == 1 && info->plist->next)
+        dup2(1, STDOUT_FILENO);
+    printf("output %d\n",fd);
+    return fd;
+}
+void execution_cmd(int ac, t_variable *env, t_path *path, t_info *info)
+{
+    (void)ac;
+    (void)env;
+    (void)path;
+    // int nb_cmds = info->lst_size;
+    // int pid;
+    // int **pipes = cree_pipe(info->lst_size);
+    int i;
     i = 0;
-    while (i < nb_cmds) 
+    while (info->plist) 
     {
-        wait(NULL);
-        i++;
+        if (info->plist->reds)
+        {
+            cherch_input(info);
+            cherch_output(info);
+        }
+        info->plist= info->plist->next;
     }
 }

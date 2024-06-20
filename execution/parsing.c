@@ -47,30 +47,39 @@ void init_info(int ac, char **av, char **env, t_info *info)
 	info->lst_size = -1;
 	info->quotes = 0;
 	info->head_e = cpy_env(env);
+	info->list = NULL;
 	info->plist = NULL;
+}
+
+int	parsing(t_info *info)
+{
+	info->line = readline ("minishell-0.0$ ");
+	if (info->line)
+		add_history(info->line);
+	info->line = expand(info);
+	info->tmp_line = info->line;
+	ft_split(info);
+	if (!stx_errors(*info))
+	{
+		create_plist(info);
+		print_list2(*info);
+	}
+	else
+		return (1);
+	return (0);
 }
 
 int main(int argc, char **argv, char **penv)
 {
 	t_info	info;
 	t_variable *my_env = builtin_env(penv);
-    augment_level_shlvl(my_env);
-    t_path *path =  malloc(sizeof(t_path));
+   	augment_level_shlvl(my_env);
+	t_path *path =  malloc(sizeof(t_path));
 	while (1)
 	{
-		
 		init_info(argc, argv, penv, &info);
-		info.line = readline ("minishell-0.0$ ");
-		if (info.line)
-			add_history(info.line);
-		info.line = expand(&info);
-		info.tmp_line = info.line;
-		info.list = NULL;
-		ft_split(&info);
-		if (!stx_errors(info))
+		if (!parsing(&info))
 		{
-			create_plist(&info);
-			print_list2(info);
 			split_path(my_env,path);
 			int s;
 			s = 0;

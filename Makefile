@@ -1,15 +1,3 @@
-# **************************************************************************** #
-#                                                                              #
-#                                                         :::      ::::::::    #
-#    Makefile                                           :+:      :+:    :+:    #
-#                                                     +:+ +:+         +:+      #
-#    By: khmessah <khmessah@student.42.fr>          +#+  +:+       +#+         #
-#                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2024/05/22 18:56:53 by mmondad           #+#    #+#              #
-#    Updated: 2024/06/20 09:34:53 by khmessah         ###   ########.fr        #
-#                                                                              #
-# **************************************************************************** #
-
 CC = cc
 NAME = minishell
 SRS = parsing/ft_split.c parsing/linked_list.c execution/parsing.c parsing/free_memory.c parsing/print.c parsing/utils.c \
