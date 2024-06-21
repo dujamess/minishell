@@ -39,6 +39,7 @@ void	print_list2(t_info info)
 		count++;
 		info.plist = info.plist->next;
 	}
+	// printf("lst = %d\n", info.lst_size);
 }
 
 void print_list(t_info info)

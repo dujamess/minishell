@@ -61,7 +61,6 @@ typedef struct s_heapnode
 
 typedef struct s_info
 {
-<<<<<<< HEAD
 	int			i;
 	int			j;
 	int			parts_l;
@@ -79,25 +78,8 @@ typedef struct s_info
 	int			quotes;
 	int			flag;
 	int			lst_size;
-=======
-	int		i;
-	int		j;
-	int		parts_l;
-	int		reds_l;
-	char	*line;
-	t_list	*list;
-	t_plist	*plist;
-	char	*tmp_line;
-	char	**penv;
-	char	**argv;
-	int		argc;
-	int		count;
-	t_env	*head_e;
-	int		quotes;
-	int		lst_size;
-	int 	fd0;
-	int 	fd1;
->>>>>>> 85a0d01 (a)
+	int			fd1;
+	int			fd0;
 }	t_info;
 
 
