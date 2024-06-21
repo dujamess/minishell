@@ -50,25 +50,33 @@ typedef struct s_env
 {
 	char			*line;
 	struct s_env	*next;
-}	t_env;
+}
+	t_env;
+typedef struct s_heapnode
+{
+    void				*data;
+	struct s_heapnode	*next;
+}	t_heapnode;
 
 typedef struct s_info
 {
-	int		i;
-	int		j;
-	int		parts_l;
-	int		reds_l;
-	char	*line;
-	t_list	*list;
-	t_plist	*plist;
-	char	*tmp_line;
-	char	**penv;
-	char	**argv;
-	int		argc;
-	int		count;
-	t_env	*head_e;
-	int		quotes;
-	int		lst_size;
+	int			i;
+	int			j;
+	int			parts_l;
+	int			reds_l;
+	char		*line;
+	t_list		*list;
+	t_plist		*plist;
+	t_env		*head_e;
+	t_heapnode	*head_h;
+	char		*tmp_line;
+	char		**penv;
+	char		**argv;
+	int			argc;
+	int			count;
+	int			quotes;
+	int			flag;
+	int			lst_size;
 }	t_info;
 
 
@@ -96,8 +104,9 @@ typedef struct variable
 		/*   length   */
 void	len_f(char *s1, t_split *data);
 int		ft_strlen(char *str);
-void	p_len(t_info *info);
 int		until_d(char *str, t_info *info);
+void	set_val(char c, t_info *info);
+void	p_len(t_list *lst, t_info *info);
 
 		/*   validators   */
 int		check_escape(char c);
@@ -116,21 +125,23 @@ void	print_env(t_env *head);
 void	add_back(t_list **list, t_list *new_node);
 void	new_node(char *str, int type, t_info *info);
 void	create_plist(t_info *info);
-t_env	*new_node_e(void);
+t_env	*new_node_e(t_info *info);
 void	add_back_p(t_plist **list, t_plist *new_node);
 void	add_back_e(t_env **list, t_env *new_node);
 t_plist	*new_pnode(t_info *info);
+void	add_back_h(t_heapnode **list, t_heapnode *new_node);\
+void	new_fnode(void *data, t_info *info);
+
 		/*    expand		*/
 char	*expand(t_info *info);
 
 
-char	*ft_strjoin(char *s1, char *s2);
+char	*ft_strjoin(char *s1, char *s2, t_info *info);
 void	ft_split(t_info *info);
 int		ft_strcmp(const char *s1, const char *s2);
 void	free_list(t_info	*info);
 char	*ft_strdup(t_info *info, t_split data);
 int		stx_errors(t_info info);
-char	*ft_substr(char *s, unsigned int start, size_t len);
 
 /**/
 

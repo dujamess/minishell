@@ -3,14 +3,30 @@
 /*                                                        :::      ::::::::   */
 /*   linked_list.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: khmessah <khmessah@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mmondad <mmondad@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 09:39:20 by mmondad           #+#    #+#             */
-/*   Updated: 2024/06/20 09:32:25 by khmessah         ###   ########.fr       */
+/*   Updated: 2024/06/03 15:33:29 by mmondad          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
+
+void	add_back_h(t_heapnode **list, t_heapnode *new_node)
+{
+	t_heapnode *tmp;
+
+	tmp = *list;
+	if (*list)
+	{
+		while ((*list)->next)
+			(*list) = (*list)->next;
+		(*list)->next = new_node;
+		*list = tmp;
+	}
+	else
+		(*list) = new_node;
+}
 
 void	add_back(t_list **list, t_list *new_node)
 {
@@ -70,7 +86,7 @@ void	create_plist(t_info *info)
 	{
 		info->i = 0;
 		info->j = 0;
-		p_len(info);
+		p_len(lst, info);
 		node = new_pnode(info);
 		while (lst && lst->type != PIPE)
 		{

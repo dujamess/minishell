@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   free_memory.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: khmessah <khmessah@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mmondad <mmondad@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/22 09:59:32 by mmondad           #+#    #+#             */
-/*   Updated: 2024/06/20 09:32:25 by khmessah         ###   ########.fr       */
+/*   Updated: 2024/05/28 10:27:29 by mmondad          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,17 +14,13 @@
 
 void	free_list(t_info	*info)
 {
-	// t_list *tmp;
+	t_heapnode *tmp;
 
-	(void)info;
-	// (void)info;
-
-	// while (info->list)
-	// {
-	// 	tmp = info->list;
-	// 	free(tmp->txt);
-	// 	info->list = info->list->next;
-	// 	free(tmp);
-	// }
-	// free(info->tmp_line);
+	while (info->head_h)
+	{
+		tmp = info->head_h;
+		info->head_h = info->head_h->next;
+		free(tmp->data);
+		free(tmp);
+	}
 }

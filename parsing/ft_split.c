@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_split.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: khmessah <khmessah@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mmondad <mmondad@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/18 15:53:20 by mmondad           #+#    #+#             */
-/*   Updated: 2024/06/20 09:32:25 by khmessah         ###   ########.fr       */
+/*   Updated: 2024/05/27 16:53:28 by mmondad          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,7 @@ char	*token(char *line, int *type, int *size, t_info *info)
 	char	tmp;
 	int		len;
 	char	*token;
+	(void)info;
 
 	len = 0;
 	tmp = line[0];
@@ -40,8 +41,7 @@ char	*token(char *line, int *type, int *size, t_info *info)
 		len++;
 	*size = len;
 	token = malloc(len + 1);
-	if (!token)
-		free_list(info); 
+	new_fnode(token, info);
 	len = -1;
 	while (tmp == line[++len])
 		token[len] = line[len];
@@ -55,13 +55,16 @@ int	add_token(t_info *info)
 	int		i;
 	int		type;
 	int		size;
-
+	char	*str;
 	i = 0;
 	size = 0;
 	while (info->line[i] && check_escape(info->line[i]))
 		i++;
 	if (info->line[i] && check_token(info->line[i]))
-		new_node(token(info->line + i, &type, &size, info), type, info);
+	{
+		str = token(info->line + i, &type, &size, info);
+		new_node(str, type, info);
+	}
 	while (info->line[i + size] &&  check_escape(info->line[i + size]))
 		i++;
 	return (size + i);

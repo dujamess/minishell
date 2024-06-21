@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   length.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: khmessah <khmessah@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mmondad <mmondad@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/25 09:29:13 by mmondad           #+#    #+#             */
-/*   Updated: 2024/06/20 09:32:25 by khmessah         ###   ########.fr       */
+/*   Updated: 2024/06/03 14:55:05 by mmondad          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,11 +58,8 @@ int	until_d(char *str, t_info *info)
 	return (i);
 }
 
-void	p_len(t_info *info)
+void	p_len(t_list *lst, t_info *info)
 {
-	t_list *lst;
-
-	lst = info->list;
 	info->reds_l = 0;
 	info->parts_l = 0;
 	while (lst && lst->type != PIPE)

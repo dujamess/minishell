@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: khmessah <khmessah@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mmondad <mmondad@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 13:37:59 by mmondad           #+#    #+#             */
-/*   Updated: 2024/06/20 09:32:25 by khmessah         ###   ########.fr       */
+/*   Updated: 2024/06/01 15:55:13 by mmondad          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,8 +37,7 @@ char	*ft_strdup(t_info *info, t_split data)
 	data.j = 0;
 	len_f(info->line, &data);
 	cpy = malloc(data.len + 1);
-	if (!cpy)
-		free_list(info);
+	new_fnode(cpy, info);
 	while (info->line[info->i] && !check_sep(info->line[info->i]))
 	{
 		if (info->line[info->i] == '\"' || info->line[info->i] == '\'')
@@ -54,55 +53,14 @@ char	*ft_strdup(t_info *info, t_split data)
 	return (cpy);
 }
 
-void	*ft_calloc(size_t count, size_t size)
-{
-	char	*point;
-	size_t	i;
-
-	point = malloc(count * size);
-	if (point == 0)
-		return (NULL);
-	i = 0;
-	while (i < count * size)
-	{
-		point[i] = '\0';
-		i++;
-	}
-	return (point);
-}
-
-char	*ft_substr(char *s, unsigned int start, size_t len)
-{
-	char	*str;
-	size_t	j;
-
-	if (s == NULL)
-		return (NULL);
-	if (start >= (unsigned int)ft_strlen(s))
-		return ((char *)ft_calloc(1, sizeof(char)));
-	if (len > ft_strlen(s) - start)
-		len = ft_strlen(s) - start;
-	j = 0;
-	str = malloc(len + 1);
-	if (str == NULL)
-		return (NULL);
-	while (j < len)
-	{
-		str[j] = s[start + j];
-		j++;
-	}
-	str[j] = '\0';
-	return (str);
-}
-
-char	*ft_strjoin(char *s1, char *s2)
+char	*ft_strjoin(char *s1, char *s2, t_info *info)
 {
 	int		i;
 	int		j;
 	char	*str;
+	(void)info;
 	str = malloc (ft_strlen(s1) + ft_strlen(s2) + 1);
-	if (str == NULL)
-		return (NULL);
+	new_fnode(str, info);
 	i = 0;
 	while (s1 && s1[i])
 	{
