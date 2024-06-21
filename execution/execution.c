@@ -72,7 +72,8 @@ int cherch_input(t_info *info)
         {
             if (info->plist->reds[i + 1])
             {
-                close(fd);
+                 if ( fd != 0)
+                    close(fd);
                 fd = open(info->plist->reds[i + 1], O_RDONLY);
                 if (fd == -1) 
                 {
@@ -87,9 +88,6 @@ int cherch_input(t_info *info)
         }
         i++;
     }
-    if (fd == 0 && info->plist->next)
-        dup2(0, STDIN_FILENO);
-    printf("input %d\n",fd);
     return fd;
 }
 int cherch_output(t_info *info)
@@ -105,7 +103,8 @@ int cherch_output(t_info *info)
         {
             if (info->plist->reds[i + 1])
             {
-                close(fd);
+                if ( fd != 0)
+                    close(fd);
                 fd = open(info->plist->reds[i + 1], O_WRONLY | O_CREAT | O_TRUNC, 0666);
                 if (fd == -1) 
                 {
@@ -122,6 +121,8 @@ int cherch_output(t_info *info)
         {
             if (info->plist->reds[i + 1])
             {
+                if ( fd != 0)
+                    close(fd);
                 close(fd);
                 fd = open(info->plist->reds[i + 1], O_WRONLY | O_CREAT | O_TRUNC, 0666);
                 dup2(fd, STDOUT_FILENO);
@@ -131,9 +132,6 @@ int cherch_output(t_info *info)
         }
         i++;
     }
-    if (fd == 1 && info->plist->next)
-        dup2(1, STDOUT_FILENO);
-    printf("output %d\n",fd);
     return fd;
 }
 void execution_cmd(int ac, t_variable *env, t_path *path, t_info *info)
@@ -142,17 +140,31 @@ void execution_cmd(int ac, t_variable *env, t_path *path, t_info *info)
     (void)env;
     (void)path;
     // int nb_cmds = info->lst_size;
-    // int pid;
+    int pid;
     // int **pipes = cree_pipe(info->lst_size);
     int i;
     i = 0;
     while (info->plist) 
     {
-        if (info->plist->reds)
+        pid = fork();
+        if (pid == 0)
         {
-            cherch_input(info);
-            cherch_output(info);
+            if (info->plist->reds)
+            {
+                cherch_input(info);
+                cherch_output(info);
+            }
+            char *s = join_commande_path1(path, info->plist->parts[i]);
+            if (s == NULL) 
+            {
+                printf("command not found : %s\n",info->plist->parts[i]);
+                exit(EXIT_FAILURE);
+            }
+            execve(s, info->plist->parts, (char **)env);
+            perror("execve");
+            exit(EXIT_FAILURE);
         }
         info->plist= info->plist->next;
     }
+    wait(NULL);
 }
