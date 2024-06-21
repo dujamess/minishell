@@ -61,9 +61,8 @@ int **cree_pipe(int number_pipe)
     }
     return pipes;
 }
-int cherch_input(t_info *info)
+int cherch_input(t_info *info ,int flag)
 {
-    int fd = 0;
     int i;
     i = 0;
     while(info->plist->reds && info->plist->reds[i])
@@ -72,99 +71,117 @@ int cherch_input(t_info *info)
         {
             if (info->plist->reds[i + 1])
             {
-                 if ( fd != 0)
-                    close(fd);
-                fd = open(info->plist->reds[i + 1], O_RDONLY);
-                if (fd == -1) 
+                close(info->fd0);
+                info->fd0 = open(info->plist->reds[i + 1], O_RDONLY);
+                if (info->fd0 == -1) 
                 {
                     printf("input ----%s\n",info->plist->reds[i + 1]);
                     perror("open");
                     exit(EXIT_FAILURE);
                 }
-                dup2(fd, STDIN_FILENO);
+                dup2(info->fd0, STDIN_FILENO);
             }
-             else
-                break;
         }
         i++;
     }
-    return fd;
+    // if (info->plist->next && info->fd0 == -1)
+    //     flag = 0;
+    return flag;
 }
-int cherch_output(t_info *info)
+int cherch_output(t_info *info ,int flag)
 {
-    int fd = 1;
     int i;
     i = 0;
-
-    dup2(1, STDOUT_FILENO);
     while(info->plist->reds && info->plist->reds[i])
     {
         if (info->plist->types[i] == O_RED)
         {
             if (info->plist->reds[i + 1])
             {
-                if ( fd != 0)
-                    close(fd);
-                fd = open(info->plist->reds[i + 1], O_WRONLY | O_CREAT | O_TRUNC, 0666);
-                if (fd == -1) 
+                close(info->fd1);
+                info->fd1 = open(info->plist->reds[i + 1], O_WRONLY | O_CREAT | O_TRUNC, 0666);
+                if (info->fd1 == -1) 
                 {
                     printf("output ----%s\n",info->plist->reds[i + 1]);
                     perror("open");
-                    exit(EXIT_FAILURE); 
+                    exit(EXIT_FAILURE);
                 }
-                dup2(fd, STDOUT_FILENO);
+                dup2(info->fd1, STDOUT_FILENO);
             }
-            else
-                break;
         }
         else if(info->plist->types[i] == A_RED)
         {
             if (info->plist->reds[i + 1])
             {
-                if ( fd != 0)
-                    close(fd);
-                close(fd);
-                fd = open(info->plist->reds[i + 1], O_WRONLY | O_CREAT | O_TRUNC, 0666);
-                dup2(fd, STDOUT_FILENO);
+                close(info->fd1);
+                info->fd1 = open(info->plist->reds[i + 1], O_WRONLY | O_CREAT | O_TRUNC, 0666);
+                if (info->fd1 == -1) 
+                {
+                    printf("output ----%s\n",info->plist->reds[i + 1]);
+                    perror("open");
+                    exit(EXIT_FAILURE);
+                }
+                dup2(info->fd1, STDOUT_FILENO);
             }
-             else
-                break;
         }
         i++;
     }
-    return fd;
+    // if (info->plist->next && info->fd1 == -1)
+    //     flag = 1;
+    return flag;
 }
-void execution_cmd(int ac, t_variable *env, t_path *path, t_info *info)
+void execution_cmd(int ac, t_variable *env, t_path *path, t_info *info, char **en)
 {
     (void)ac;
     (void)env;
     (void)path;
-    // int nb_cmds = info->lst_size;
     int pid;
-    // int **pipes = cree_pipe(info->lst_size);
+    // int fd[2];
     int i;
     i = 0;
     while (info->plist) 
     {
+        int flag1 = 2;
+        int flag0 = 2;
+        // pipe(fd);
         pid = fork();
         if (pid == 0)
         {
-            if (info->plist->reds)
-            {
-                cherch_input(info);
-                cherch_output(info);
-            }
             char *s = join_commande_path1(path, info->plist->parts[i]);
             if (s == NULL) 
             {
                 printf("command not found : %s\n",info->plist->parts[i]);
+                if (info->plist->reds)
+                {
+                    cherch_input(info,flag0);
+                    cherch_output(info,flag1);
+                }
                 exit(EXIT_FAILURE);
             }
-            execve(s, info->plist->parts, (char **)env);
+            if (info->plist->reds)
+            {
+                flag0 = cherch_input(info,flag0);
+                flag1 = cherch_output(info,flag1);
+                // if (flag0 != 2 && info->fd0)
+                // {
+                //     dup2(fd[0],STDIN_FILENO);
+                //     close(fd[1]);
+                // }
+                // if (flag1 != 2 && info->fd1)
+                // {
+                //     dup2(fd[1],STDOUT_FILENO);
+                //     close(fd[0]);
+                // }
+            }
+            execve(s, info->plist->parts, en);
             perror("execve");
             exit(EXIT_FAILURE);
         }
         info->plist= info->plist->next;
     }
-    wait(NULL);
+    // while(info->plist)
+    // {
+        wait(NULL);
+    //     info->plist= info->plist->next;
+    // }
 }

@@ -31,6 +31,7 @@
 # define I_RED 5
 # define O_RED 6
 
+
 typedef struct s_plist
 {
 	char			**parts;
@@ -60,6 +61,7 @@ typedef struct s_heapnode
 
 typedef struct s_info
 {
+<<<<<<< HEAD
 	int			i;
 	int			j;
 	int			parts_l;
@@ -77,6 +79,25 @@ typedef struct s_info
 	int			quotes;
 	int			flag;
 	int			lst_size;
+=======
+	int		i;
+	int		j;
+	int		parts_l;
+	int		reds_l;
+	char	*line;
+	t_list	*list;
+	t_plist	*plist;
+	char	*tmp_line;
+	char	**penv;
+	char	**argv;
+	int		argc;
+	int		count;
+	t_env	*head_e;
+	int		quotes;
+	int		lst_size;
+	int 	fd0;
+	int 	fd1;
+>>>>>>> 85a0d01 (a)
 }	t_info;
 
 
@@ -98,7 +119,7 @@ typedef struct variable
 {
     char *nom;
     char *valeur;
-}t_variable;
+}	t_variable;
 
 
 		/*   length   */
@@ -158,7 +179,7 @@ void    	builtin_exit(int ac,char **av);
 void    	builtin_echo(int ac,char **av);
 int    		builtin_cd(int ac,char **av,t_variable *my_env);
 t_variable *builtin_env(char **env);
-void    	execution_cmd(int ac,t_variable *env,t_path *path,t_info	*info);
+void    	execution_cmd(int ac,t_variable *env,t_path *path,t_info	*info, char **en);
 int			run_builtins(int s,char **split,t_variable *my_env);
 void    	split_path(t_variable  *env,t_path *path);
 t_variable split_env(char *env_line);

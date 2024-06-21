@@ -6,7 +6,11 @@
 /*   By: mmondad <mmondad@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/18 15:57:53 by mmondad           #+#    #+#             */
+<<<<<<< HEAD:execution/main.c
 /*   Updated: 2024/06/03 15:14:05 by mmondad          ###   ########.fr       */
+=======
+/*   Updated: 2024/06/21 10:17:22 by khmessah         ###   ########.fr       */
+>>>>>>> 85a0d01 (a):execution/parsing.c
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,15 +67,22 @@ int	parsing(t_info *info)
 	if (!stx_errors(*info))
 	{
 		create_plist(info);
+<<<<<<< HEAD:execution/main.c
 		//print_list2(*info);
+=======
+		// print_list2(*info);
+>>>>>>> 85a0d01 (a):execution/parsing.c
 	}
 	else
 		return (1);
 	return (0);
 }
 
+
+
 int main(int argc, char **argv, char **penv)
 {
+	// int 
 	t_info	info;
 	t_variable *my_env = builtin_env(penv);
    	augment_level_shlvl(my_env);
@@ -91,7 +102,7 @@ int main(int argc, char **argv, char **penv)
 			if (check_is_builtin(&info) == 1)
 				my_env = exec_builtin(my_env,&info,s);
 			else
-				execution_cmd(s,my_env,path,&info);
+				execution_cmd(s,my_env,path,&info, penv);
 		}
 		else if (parsing(&info))
 			printf("stx_error\n");
